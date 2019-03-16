@@ -68,12 +68,16 @@ class Tamagotchi():
                 answer = a - b
             start = time.time()
             input_answer = input()
+            sign = 1
+            if input_answer[0] == "-":
+                sign = -1
+                input_answer = input_answer[1:len(input_answer)]
             if input_answer.isdigit():
                 input_answer = int(input_answer)
                 if time.time() - start >= 5:
                     print("You didn't manage to do it in time")
                 else:
-                    if answer == input_answer:
+                    if answer == sign*input_answer:
                         correct += 1
                         print("Correct")
                     else:
