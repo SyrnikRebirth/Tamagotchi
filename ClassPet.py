@@ -3,7 +3,6 @@ import time
 
 class Tamagotchi():
 
-
     def __init__(self, name):
         self.name = name
         self.hunger = random.randrange(1, 10)
