@@ -1,6 +1,11 @@
 import random
 import time
 
+def handsome_print(input):
+    print("")
+    print(input)
+    print("")
+
 class Tamagotchi():
 
     def __init__(self, name):
@@ -24,26 +29,18 @@ class Tamagotchi():
 
     def voice(self):
         if len(self.sounds) == 0:
-            print("")
-            print("You didn't teach me anything.")
-            print("")
+            handsome_print("You didn't teach me anything.")
         else:
-            print("")
-            print(self.sounds[random.randrange(len(self.sounds))])
-            print("")
+            handsome_print(self.sounds[random.randrange(len(self.sounds))])
             self.reduce_sadness()
 
     def teach(self, word):
-        print("")
-        print("Ohh, new words?  I like everything new!")
-        print("")
+        handsome_print("Ohh, new words?  I like everything new!")
         self.sounds.append(word)
         self.reduce_sadness()
 
     def feed(self):
-        print("")
-        print("You finally remembered, that I'm starving")
-        print("")
+        handsome_print("You finally remembered, that I'm starving")
         self.reduce_hunger()
 
     def play_calculator(self):
@@ -82,13 +79,9 @@ class Tamagotchi():
                     else:
                         print("Incorrect")
                 i += 1
-                print("")
-                print("You have already answered " + str(i) + " from 5 questions")
-                print("")
+                handsome_print("You have already answered " + str(i) + " from 5 questions")
             else:
-                print("")
-                print("It's not an answer!!")
-                print("")
+                handsome_print("It's not an answer!!")
         print("")
         if correct > 3:
             print("Your score is " + str(correct) + " out of 5")
@@ -127,13 +120,9 @@ class Tamagotchi():
                         self.sadness = max(0, self.sadness - 3)
                         break
                 else:
-                    print("")
-                    print("Here are just three thimbles, silly.")
-                    print("")
+                    handsome_print("Here are just three thimbles, silly.")
             else:
-                print("")
-                print("You need to choose a number. Try again.")
-                print("")
+                handsome_print("You need to choose a number. Try again.")
 
 
     def reduce_hunger(self):
