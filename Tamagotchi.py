@@ -15,6 +15,13 @@ def handsome_print(input):
     print("")
 
 
+def restart_thread_after_event(s, s_stop, command):
+    s_stop.clear()
+    s.join()
+    s = threading.Thread(target=my_input, args=(s_stop, command), daemon=True)
+    s.start()
+
+
 OPTIONS_1 = '''Welcome!!
 Would you like to adopt one of our tamagotchi?
 
@@ -46,21 +53,18 @@ def main():
     print(OPTIONS_1)
     while True:
         command = input()
-        if command.isdigit():
-            if int(command) in [1, 2]:
-                if command == "1":
-                    handsome_print("Please name your new pet")
-                    word = input()
-                    start_time = time.time()
-                    pet = ClassPet.Tamagotchi(word)
-                    break
-                else:
-                    handsome_print("Farewell, Ashen One")
-                    sys.exit()
-            else:
-                handsome_print("I don't understand you. Can you repeat?")
-        else:
+        if not (command.isdigit() and int(command) in [1, 2]):
             handsome_print("I don't understand you. Can you repeat?")
+            continue
+        if command == "1":
+            handsome_print("Please name your new pet")
+            word = input()
+            start_time = time.time()
+            pet = ClassPet.Tamagotchi(word)
+            break
+        else:
+            handsome_print("Farewell, Ashen One")
+            sys.exit()
 
     command = [""]
     s_stop = threading.Event()
@@ -81,57 +85,48 @@ def main():
                 handsome_print("Your pet has just updated its status")
                 pet.status()
 
-        if command[0].isdigit():
-            if int(command[0]) in range(7):
-                if command[0] == "1":
-                    pet.feed()
-                elif command[0] == "2":
-                    command[0] = ""
-                    handsome_print("Please, enter your sentence")
-                    while command[0] == "":
-                        time.sleep(1)
-                    pet.teach(command[0])
-                elif command[0] == "3":
-                    command[0] = ""
-                    print(OPTIONS_3)
-                    s_stop.set()
-                    while command[0] == "":
-                        time.sleep(1)
-                    if int(command[0]) in [1, 2, 3]:
-                        if command[0] == "1":
-                            pet.play_thimbles()
-                            s_stop.clear()
-                            s.join()
-                            s = threading.Thread(target=my_input, args=(s_stop, command), daemon=True)
-                            s.start()
-                        elif command[0] == "2":
-                            pet.play_calculator()
-                            s_stop.clear()
-                            s.join()
-                            s = threading.Thread(target=my_input, args=(s_stop, command), daemon=True)
-                            s.start()
-                        else:
-                            handsome_print("Ohh, it's okay")
-                            pet.sadness += 3
-                            s_stop.clear()
-                            s.join()
-                            s = threading.Thread(target=my_input, args=(s_stop, command), daemon=True)
-                            s.start()
-                    else:
-                        handsome_print("Sorry i can't understand you")
-                elif command[0] == "4":
-                    pet.voice()
-                elif command[0] == "5":
-                    print("")
-                    pet.status()
-                elif command[0] == "6":
-                    handsome_print("Farewell, master")
-                    sys.exit()
-            else:
-                handsome_print("I can't understand you. Can you repeat?")
-        else:
+        if not (command[0].isdigit() and int(command[0]) in range(7)):
             handsome_print("I can't understand you. Can you repeat?")
+            command[0] = ""
+            continue
 
+        if command[0] == "1":
+            pet.feed()
+        elif command[0] == "2":
+            command[0] = ""
+            handsome_print("Please, enter your sentence")
+            while command[0] == "":
+                time.sleep(1)
+            pet.teach(command[0])
+        elif command[0] == "3":
+            command[0] = ""
+            print(OPTIONS_3)
+            s_stop.set()
+            while command[0] == "":
+                time.sleep(1)
+            if not (command[0].isdigit() and int(command[0]) in [1, 2, 3]):
+                handsome_print("Sorry i can't understand you")
+                restart_thread_after_event(s, s_stop, command)
+                continue
+
+            if command[0] == "1":
+                pet.play_thimbles()
+                restart_thread_after_event(s, s_stop, command)
+            elif command[0] == "2":
+                pet.play_calculator()
+                restart_thread_after_event(s, s_stop, command)
+            else:
+                handsome_print("Ohh, it's okay")
+                pet.sadness += 3
+                restart_thread_after_event(s, s_stop, command)
+        elif command[0] == "4":
+            pet.voice()
+        elif command[0] == "5":
+            print("")
+            pet.status()
+        elif command[0] == "6":
+            handsome_print("Farewell, master")
+            sys.exit()
         command[0] = ""
     s.join()
 
